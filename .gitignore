@@ -1,0 +1,15 @@
+# Python virtual environment
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+
+# Node modules & build artifacts
+portal/node_modules/
+portal/dist/
+
+# System / logs
+.DS_Store
+*.log
+.system_generated/
+.idea/
+.vscode/
