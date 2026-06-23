@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // API Configuration
 const API_BASE_URL = 'http://localhost:8000/api';
@@ -8,6 +8,7 @@ function App() {
   const [selectedCase, setSelectedCase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isInitialLoad = loading && cases.length === 0;
   
   // Modal state for submitting a new claim
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,42 +28,35 @@ function App() {
   });
 
   // Fetch Cases from API
-  const fetchCases = async () => {
+  const fetchCases = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await fetch(`${API_BASE_URL}/cases`);
       if (!res.ok) throw new Error('API server returned an error');
       const data = await res.json();
       setCases(data);
       setError(null);
-      
-      // Auto-select first case if none is selected
-      if (data.length > 0 && !selectedCase) {
-        setSelectedCase(data[0]);
-      } else if (selectedCase) {
-        // Keep selected case updated
-        const updated = data.find(c => c.id === selectedCase.id);
-        if (updated) setSelectedCase(updated);
-      }
+
+      // Auto-select first case if none is selected, otherwise keep it fresh
+      setSelectedCase(prev => {
+        if (!prev) return data.length > 0 ? data[0] : null;
+        return data.find(c => c.id === prev.id) || prev;
+      });
     } catch (err) {
-      console.warn('Backend not running, using mock memory state');
+      console.warn('Backend not running, using mock memory state', err);
       setError('Backend offline. Running in local demo mode.');
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchCases();
   }, []);
 
-  // Poll cases every 8 seconds to capture "live" updates
+  // Initial load + poll every 8 seconds to capture "live" case updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchCases();
-    }, 8000);
+    // Async fetch only updates state after awaiting the network response.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCases();
+    const interval = setInterval(fetchCases, 8000);
     return () => clearInterval(interval);
-  }, [selectedCase]);
+  }, [fetchCases]);
 
   // Handle Form Input Changes
   const handleInputChange = (e) => {
@@ -108,6 +102,7 @@ function App() {
       });
       fetchCases();
     } catch (err) {
+      console.error('Claim submission failed', err);
       alert('Could not submit claim. Make sure the FastAPI backend is running!');
     }
   };
@@ -136,6 +131,7 @@ function App() {
       setAdjusterNotes('');
       fetchCases();
     } catch (err) {
+      console.error(`Case ${actionType} failed`, err);
       alert(`Error trying to ${actionType} case. Ensure backend is online.`);
     } finally {
       setSubmittingAction(false);
@@ -168,7 +164,7 @@ function App() {
       {/* Stats row */}
       <section className="stats-grid">
         <div className="stat-card primary">
-          <span className="stat-label">Total Claims Recieved</span>
+          <span className="stat-label">Total Claims Received</span>
           <span className="stat-value">{totalCases}</span>
         </div>
         <div className="stat-card triage">
@@ -212,6 +208,20 @@ function App() {
                 </tr>
               </thead>
               <tbody>
+                {isInitialLoad && (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', color: '#9ca3af' }}>
+                      Loading cases...
+                    </td>
+                  </tr>
+                )}
+                {!isInitialLoad && cases.length === 0 && (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', color: '#9ca3af' }}>
+                      No cases yet. Trigger a claims intake to get started.
+                    </td>
+                  </tr>
+                )}
                 {cases.map((claim) => (
                   <tr 
                     key={claim.id} 
