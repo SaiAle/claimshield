@@ -48,9 +48,19 @@ function LandingPage({ onEnter }) {
         </button>
       </nav>
 
-      {/* Hero */}
+      {/* Hero with full-bleed background video */}
       <header className="hero">
-        <div className="hero-copy">
+        <video
+          className="hero-bg-video"
+          src={heroDemo}
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="hero-bg-overlay" />
+
+        <div className="hero-copy glass-panel">
           <span className="hero-badge">UiPath AgentHack · Track 1 — Maestro Case</span>
           <h2 className="hero-title">
             Intelligent insurance claims &amp; <span className="grad-text">fraud case manager</span>
@@ -80,21 +90,6 @@ function LandingPage({ onEnter }) {
               <span className="hero-stat-num">Auto + Human</span>
               <span className="hero-stat-label">Decisioning</span>
             </div>
-          </div>
-        </div>
-
-        {/* Product demo video */}
-        <div className="hero-visual">
-          <div className="hero-video-frame">
-            <video
-              className="hero-video"
-              src={heroDemo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-            />
           </div>
         </div>
       </header>
