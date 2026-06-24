@@ -1,3 +1,5 @@
+import heroDemo from './assets/hero-demo.mp4';
+
 const PIPELINE = [
   { stage: 'Intake', icon: '📥', desc: 'Webhooks capture claims from email, portal, or API and spawn a Maestro Case.' },
   { stage: 'Triage', icon: '🧭', desc: 'The Triage Agent checks documents and policy coverage limits.' },
@@ -81,30 +83,18 @@ function LandingPage({ onEnter }) {
           </div>
         </div>
 
-        {/* Visual preview mock */}
-        <div className="hero-visual" aria-hidden="true">
-          <div className="preview-card">
-            <div className="preview-head">
-              <div>
-                <div className="preview-name">Marcus Vance</div>
-                <div className="preview-sub">Medical Expense · POL-1082-TRV</div>
-              </div>
-              <span className="badge stage-review">Review</span>
-            </div>
-            <div className="preview-risk-label">
-              <span>AI Fraud Detection</span>
-              <span className="risk-level-display high">High Risk · 75%</span>
-            </div>
-            <div className="risk-bar-bg">
-              <div className="risk-bar-fill high" style={{ width: '75%' }}></div>
-            </div>
-            <div className="preview-anomaly">⚠️ Duplicate policy claim pattern detected</div>
-            <div className="preview-anomaly">⚠️ High medical cost requires manual audit</div>
-            <div className="preview-pipeline">
-              {PIPELINE.map((p, i) => (
-                <span key={p.stage} className={`preview-pip ${i <= 3 ? 'on' : ''}`}>{p.stage}</span>
-              ))}
-            </div>
+        {/* Product demo video */}
+        <div className="hero-visual">
+          <div className="hero-video-frame">
+            <video
+              className="hero-video"
+              src={heroDemo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
           </div>
         </div>
       </header>
