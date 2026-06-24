@@ -31,7 +31,7 @@ function LandingPage({ onEnter }) {
 
         <div className="hero-copy glass-panel">
           <h2 className="hero-title">
-            Intelligent insurance claims &amp; <span className="grad-text">fraud case manager</span>
+            Smarter claims. <span className="grad-text">Less fraud.</span>
           </h2>
           <p className="hero-subtitle">
             Triage claims, score fraud risk, and route exceptions to human adjusters.
