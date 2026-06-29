@@ -31,10 +31,10 @@ function LandingPage({ onEnter }) {
 
         <div className="hero-copy glass-panel">
           <h2 className="hero-title">
-            Smarter claims. <span className="grad-text">Less fraud.</span>
+            Catch fraud. <span className="grad-text">Pay faster.</span>
           </h2>
           <p className="hero-subtitle">
-            Triage claims, score fraud risk, and route exceptions to human adjusters.
+            AI triages every claim, scores fraud risk, and sends only the tricky ones to your adjusters.
           </p>
           <div className="hero-actions">
             <button className="quick-submit-btn hero-cta" onClick={onEnter}>
